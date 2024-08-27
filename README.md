@@ -2,9 +2,6 @@
 
 This NSO authentication package provides SAMLv2 functionality based on original cisco-nso-saml2-auth and modified to compatible with Cisco DUO.  The limitation and configuration that applied on cisco-nso-saml2-auth still applies on this packages. For the original Readme of the cisco-nso-saml2-auth, please refer to README_original.md file. 
 
-## Tested Enviorment
-NSO Version Requirment: >=6.3.0
-
 ## Demo Testbed include Deployment Guide
 * Native NSO installation without assertion encryption enabled - https://github.com/NSO-developer/nso-sso-duo-integration---native 
 * Containerized NSO installation with assertion encryption enabled - https://github.com/NSO-developer/nso-sso-duo-integration---containerzed-nso 
