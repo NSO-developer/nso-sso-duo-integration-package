@@ -465,28 +465,38 @@ def acs(saml_cfg, args):
 
 
 def main():
-    logger.debug("SAMLv2: scripts/authenticate")
+    logger.info("SAMLv2: scripts/authenticate")
 
     try:
         args = parse_args(sys.stdin.readline())
+        logger.info(f"args - output: {args}")
+        
+        if args["ctx"]== "webui":
+            logger.info("WebUI SSO Authentication Sequence")
+            request_path = get_path(args["request"])
+            assert_handled_path(request_path)
 
-        request_path = get_path(args["request"])
-        assert_handled_path(request_path)
+            saml_cfg = lookup_config()
 
-        saml_cfg = lookup_config()
+            if request_path == LOGIN_PATH:
+                login(saml_cfg, args)
+            elif request_path == LOGOUT_PATH:
+                logout()
+            elif request_path == METADATA_PATH:
+                metadata(saml_cfg)
+            elif request_path == ACS_PATH:
+                acs(saml_cfg, args)
+        elif  args["ctx"]== "cli":
+            logger.info("CLI Package Challenge Sequence")
+            print(args["password"])
 
-        if request_path == LOGIN_PATH:
-            login(saml_cfg, args)
-        elif request_path == LOGOUT_PATH:
-            logout()
-        elif request_path == METADATA_PATH:
-            metadata(saml_cfg)
-        elif request_path == ACS_PATH:
-            acs(saml_cfg, args)
+        else :
+            print("reject 'permission denied'")
+
 
     except Exception as e:
         print(f"error '{e}'")
-        logger.debug(traceback.format_exc())
+        logger.error(traceback.format_exc())
 
 
 if __name__ == "__main__":

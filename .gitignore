@@ -1,2 +1,4 @@
 load-dir
 python
+scripts/__pycache__/*
+duo_unix/
