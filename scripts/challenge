@@ -2,6 +2,8 @@
 
 import base64, json, logging, os, sys
 import ncs, _ncs
+import grp
+from pwd import getpwnam, getpwall
 
 
 logdir = os.getenv("NCS_LOG_DIR")
@@ -44,27 +46,42 @@ def parse_args(args):
 
 def main():
     logger.info(f"Trigger Package Challenge")
-    """Simple test package chal that echoes your input."""
+    """Simple test package chal that echoes your input."""    
     l = sys.stdin.readline()
     logger.info(f"echo-chal - line: " + l.replace("\n", ""))
     a = parse_args(l)
+    logger.info(f"echo-chal - ctx: " + str(a))
 
-    try:
-        logger.info(f"echo-chal - ctx: " + a["ctx"])
-        if a["ctx"] == "cli":
-            logger.info(f"echo-chal - challengeid: " + a["challengeid"])
-            logger.info(f"echo-chal - response: " + a["response"])
-            packagechal = a["response"]
-        else :
-            packagechal = "reject 'unknown ctx'"
+    file1 = open(f"/tmp/{a['challengeid']}.txt", "r") 
+    faresult=file1.read()
+    file1.close()
+    logger.info("deleting - "+f"/tmp/{a['challengeid']}.txt")
+    os.remove(f"/tmp/{a['challengeid']}.txt")
 
-        logger.info(f"echo-chal - output: {packagechal}")
-        print(f"{packagechal}")
+    logger.info("faresult - "+str(faresult))
+    #[6] Successful Duo login for 'admin'
+    #[4] Failed Duo login for 'admin'   
+    if "Successful" in faresult:
+        userobj=getpwnam(a["challengeid"])
+        logger.info("User Information - " + str(userobj))
+        uid=userobj.pw_uid
+        gid=userobj.pw_gid
+        groups=grp.getgrgid(gid).gr_name
+        homedir=userobj.pw_dir
+        accept = (f"accept_username {str_to_base64(a['challengeid']).strip()} "
+                               f"{groups} "
+                               f"{uid} "
+                               f"{gid} "
+                               f"{gid} "
+                               f"{homedir}")
+        #accept=f"accept {groups} {a['challengeid']} {uid} {gid} /home/{a['challengeid']} {a['challengeid']}"
+        logger.info(f"{accept}")
+        print(f"{accept}", flush=True)
+        logger.info("Auth Successed")
+    else:
+        logger.error("DUO authentication failed")
+        print("reject 'DUO authentication failed'", flush=True)
 
-    except Exception as e:
-        logger.info(f"echo-chal - error: No {e} header")
-        print("reject 'access denied'")
 
 if __name__ == "__main__":
-    logger.info(f"Trigger Package Challenge1")
     main()

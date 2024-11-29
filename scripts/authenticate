@@ -41,6 +41,7 @@ import uuid
 import xml.etree.ElementTree as ET
 import json
 from pwd import getpwnam, getpwall
+import subprocess
 
 import ncs
 import _ncs
@@ -488,10 +489,27 @@ def main():
                 acs(saml_cfg, args)
         elif  args["ctx"]== "cli":
             logger.info("CLI Package Challenge Sequence")
-            print(args["password"])
+            try:
+                logger.info("User found")
+                getpwnam(args["user"])
+            except KeyError:
+                logger.error('User not exist')
+                print("reject User not exist")
+            challenge=f"challenge '{str_to_base64(args['user']).strip()}' '{str_to_base64('Authenticating DUO, Press ENTER to continue....').strip()}'"
+            logger.info(challenge)
+            print(challenge, flush=True)
 
+            logger.info("Duo Auth sequence")
+            output = subprocess.Popen(['/bin/bash', '-c',f'/usr/sbin/login_duo -d -f {args["user"]} echo ""'], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[1].decode("utf-8")
+            logger.info("Auth Result - " + str(output))
+            if len(output) == 0:
+                print("reject 'DUO Authentication Error'", flush=True)
+            #/tmp/{a['challengeid']}.txt
+            file1 = open(f"/tmp/{args['user']}.txt","w+")
+            file1.write(str(output))
+            file1.close()
         else :
-            print("reject 'permission denied'")
+            print("reject 'permission denied'", flush=True)
 
 
     except Exception as e:

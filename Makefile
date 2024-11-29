@@ -12,6 +12,8 @@ duo: clean_duo duo_deps build_duo
 
 duo_deps:
 	apt-get install sudo autoconf libtool libpam-dev libssl-dev make
+deps:
+	pip install -r requirements.txt
 
 build_duo:
 	git clone org-526376@github.com:duosecurity/duo_unix.git
