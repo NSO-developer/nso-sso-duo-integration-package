@@ -2,10 +2,19 @@
 
 This NSO authentication package provides SAMLv2 functionality based on original cisco-nso-saml2-auth and modified to compatible with Cisco DUO.  The limitation and configuration that applied on cisco-nso-saml2-auth still applies on this packages. For the original Readme of the cisco-nso-saml2-auth, please refer to README_original.md file. 
 
+## Branches
+The repository is seperated into several branch. 
+* main - WebUI protection with DUO
+* cli_auth -  WebUI protection + CLI over SSH Multifactor Authentication with DUO
+* various NSO version - WebUI protection with DUO + NSO Version specific support
+
+The cli_auth branch only works in Linux due to the limitation of the duo_login CLI Tool. More specifictly, "cli_auth" branch is build based on Ubuntu. "main" and other branch do not have such limitation. Therefore, we create two seperate branch.
+
 ## Tested Enviorment
 NSO Version Requirment: >=6.3.0
 
 ## Demo Testbed include Deployment Guide
+These demo will automatically pull this repository inside the "package" folder. 
 * Native NSO installation without assertion encryption enabled - https://github.com/NSO-developer/nso-sso-duo-integration---native 
 * Containerized NSO installation with assertion encryption enabled - https://github.com/NSO-developer/nso-sso-duo-integration---containerzed-nso 
 
