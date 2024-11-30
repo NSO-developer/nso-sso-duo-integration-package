@@ -2,6 +2,8 @@
 
 This NSO authentication package provides SAMLv2 functionality based on original cisco-nso-saml2-auth and modified to compatible with Cisco DUO.  The limitation and configuration that applied on cisco-nso-saml2-auth still applies on this packages. For the original Readme of the cisco-nso-saml2-auth, please refer to README_original.md file. 
 
+Except the WebUI protection and feature that introduced in the "main" branch, this branch also include the CLI protection with Multifactor Authentication(2FA) via "external-challenge" and "package-challenge". The CLI protection is done with the help of login_duo CLI Tool.
+
 ## Demo Testbed include Deployment Guide
 * Native NSO installation without assertion encryption enabled - https://github.com/NSO-developer/nso-sso-duo-integration---native 
 * Containerized NSO installation with assertion encryption enabled - https://github.com/NSO-developer/nso-sso-duo-integration---containerzed-nso 
@@ -41,6 +43,7 @@ Oiriginal cisco-nso-saml2-auth enforce the unstandarlized "IssueInstant" formati
  Clean up the certification string inside metadata and remove unessasary linebreak in the end. 
 
 ### New Feature
+* CLI 2FA Protection with login_duo when the user is login via CLI over SSH.
 * Better authentication method than checking extra "saml:AttributeStatement"
 If the uid,gid,homedir,groups,gids attribute is not provided by the IdP, the package will try to obtain the information from the following source
     * groups,gids  - NACM configuration
