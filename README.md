@@ -2,6 +2,11 @@
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/NSO-developer/nso-sso-duo-integration-package)  
 This NSO authentication package provides SAMLv2 functionality based on original cisco-nso-saml2-auth and modified to compatible with Cisco DUO.  The limitation and configuration that applied on cisco-nso-saml2-auth still applies on this packages. For the original Readme of the cisco-nso-saml2-auth, please refer to README_original.md file. 
 
+## Notice
+This repository is based on the first edition of package authentication package and the fix has been merged into the latest version of the SAML Packages. Please refer to the official package in the packages/auth folder inside NSO installation folder.   
+MFA example will be move to example.ncs with better coverage in the future release.  
+For now, we will archive this repository.   
+
 ## Branches
 The repository is seperated into several branch. 
 * main - WebUI protection with DUO
